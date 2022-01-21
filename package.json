@@ -1,0 +1,30 @@
+{
+  "name": "example-create-react-app-express",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./index.js",
+  "engines": {
+    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+  },
+  "scripts": {
+    "client": "cd video && yarn start",
+    "server": "nodemon --inspect index.js --ignore video/ --ignore ./backend/db.json",
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+    "prod": "cd video && yarn build && cd ../ && node index.js"
+  },
+  "dependencies": {
+    "@signalwire/realtime-api": "^3.0.0-beta.2",
+    "axios": "^0.21.1",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.5.1",
+    "lowdb": "^3.0.0",
+    "socket.io": "^4.4.0",
+    "tinydb": "^0.1.0"
+  },
+  "devDependencies": {
+    "concurrently": "^4.0.1"
+  }
+}
