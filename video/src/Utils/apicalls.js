@@ -25,7 +25,6 @@ async function check_credentials({ space, token, projectid }) {
 }
 
 async function delete_room({ roomid, jwt }) {
-  console.log("got jwt", jwt);
   try {
     let m = await Axios.post(apiurl + "/delete_room", {
       jwt,
