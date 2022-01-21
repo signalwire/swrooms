@@ -4,7 +4,10 @@ Host video conferences in your own space using SignalWire’s Video APIs. You’
 
 ## Introduction
 
-This codebase contains both the frontend and the backend for the [swrooms.com](http://swrooms.com) website. The frontend code written in React is inside the `video` folder. It uses the SignalWire Video JS library to create video calls. It also uses custom libraries
+This codebase contains both the frontend and the backend for the [swrooms.com](http://swrooms.com) website. The frontend code written using React is inside the `video` folder. It uses the SignalWire Video JS library to create video calls. It also uses endpoints from our backend that proxy to SignalWire Video APIs.
+
+The backend code uses Node.js and Express to present API endpoints for the frontend to consume. It keeps track of rooms and members in realtime using
+SignalWire Node.js Realtime SDK for video.
 
 ## Running swrooms locally
 
