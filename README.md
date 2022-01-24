@@ -21,8 +21,8 @@ SignalWire Node.js Realtime SDK for video.
    To develop, run `yarn dev`. It will be available at `[localhost:3000](http://localhost:3000)` by default.
 
 Swrooms uses subdomains to separate spaces. So you'll need to make sure that your development environment supports subdomains on localhost.
-Google Chrome seems to automatically make `subdomain.localhost:5000` type of URLs work. Otherwise, you'll need to (add new entries
-to your hosts file)[https://stackoverflow.com/questions/19016553/add-subdomain-to-localhost-url].
+Google Chrome seems to automatically make `subdomain.localhost:5000` type of URLs work. Otherwise, you'll need to [add new entries
+to your hosts file](https://stackoverflow.com/questions/19016553/add-subdomain-to-localhost-url).
 
 ## Logging in
 
