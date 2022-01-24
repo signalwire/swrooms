@@ -16,7 +16,7 @@ async function read_db() {
 
 async function write_db(data) {
   db.data = data;
-  return db.wriite();
+  return db.write();
 }
 
 async function append_key(key, value) {
