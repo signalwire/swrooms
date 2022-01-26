@@ -17,8 +17,8 @@ SignalWire Node.js Realtime SDK for video.
    For backend the `.env.sample` is right at the root of the repo. Only one variable is essential for you to set: `JWT_SECRET`. Make it a strong, random, unique password. Then you can `mv env.sample .env` to situate the file.  
    For the frontend, the `.env.sample` file is in `video` folder. You don’t necessarily need to change anything here, just `mv env.sample .env`. If you ever have to host the backend on a separate URL, keep that URL at `REACT_APP_API_URL`.
 
-4. Finally, if you’d like to just give it a whirl, cd into the root of the repo and go `yarn prod`. It’ll build the frontend and serve it via the backend. It will be available at `[localhost:5000](http://localhost:5000)` or whatever port you’ve set.  
-   To develop, run `yarn dev`. It will be available at `[localhost:3000](http://localhost:3000)` by default.
+4. Finally, if you’d like to just give it a whirl, cd into the root of the repo and go `yarn prod`. It’ll build the frontend and serve it via the backend. It will be available at [`localhost:5000`](http://localhost:5000) or whatever port you’ve set.  
+   To develop, run `yarn dev`. It will be available at [`localhost:3000`](http://localhost:3000) by default.
 
 Swrooms uses subdomains to separate spaces. So you'll need to make sure that your development environment supports subdomains on localhost.
 Google Chrome seems to automatically make `subdomain.localhost:5000` type of URLs work. Otherwise, you'll need to [add new entries
