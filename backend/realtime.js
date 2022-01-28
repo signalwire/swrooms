@@ -128,25 +128,27 @@ function io_realtime(server) {
         console.log("Unauthorized Socket connection. Disconnecting...");
         return;
       }
-      token = token.token;
 
-      let client = loggedClients[data.projectid]?.client;
+      let client = loggedClients[token.projectid]?.client;
       if (client === null || client === undefined) {
         console.log("\nStarting new session, no previous session found.");
-        client = await start_new_session({ projectid: data.projectid, token });
+        client = await start_new_session({
+          projectid: token.projectid,
+          token: token.token,
+        });
       } //send error?
 
-      loggedClients[data.projectid].notifyList[socket.id] = (message, obj) => {
+      loggedClients[token.projectid].notifyList[socket.id] = (message, obj) => {
         // console.log(message, obj, "sending to client");
         io.to(socket.id).emit(message, obj);
       };
 
-      if (loggedClients[data.projectid].roomSessions.length > 0) {
+      if (loggedClients[token.projectid].roomSessions.length > 0) {
         console.log("\nSending room session list to client");
 
         let dataToSend = [];
-        for (let i in loggedClients[data.projectid].roomSessions) {
-          let roomSession = loggedClients[data.projectid].roomSessions[i];
+        for (let i in loggedClients[token.projectid].roomSessions) {
+          let roomSession = loggedClients[token.projectid].roomSessions[i];
 
           let roomToSend = {
             id: roomSession.id,
@@ -185,7 +187,7 @@ function io_realtime(server) {
         if (command === "setLayout") {
           socket.on(command, ({ sessionId, layout }) => {
             console.log("Got signal to set layout");
-            let room = loggedClients[data.projectid].roomSessions.find(
+            let room = loggedClients[token.projectid].roomSessions.find(
               (roomSession) => roomSession.id === sessionId
             );
             if (room === undefined)
@@ -198,7 +200,7 @@ function io_realtime(server) {
         } else {
           socket.on(command, ({ id, roomId }) => {
             console.log(`Got signal to ${command} user`);
-            let room = loggedClients[data.projectid].roomSessions.find(
+            let room = loggedClients[token.projectid].roomSessions.find(
               (roomSession) => roomSession.roomId === roomId
             );
             if (room === undefined)
@@ -215,7 +217,7 @@ function io_realtime(server) {
 
       socket.on("disconnect", () => {
         console.log(" - Socketio: Disonnected", socket.id);
-        delete loggedClients[data.projectid].notifyList[socket.id];
+        delete loggedClients[token.projectid].notifyList[socket.id];
       });
     });
   });
