@@ -14,7 +14,7 @@ import {
 import { moderatorPermissions, normalPermissions } from "../globals.js";
 import { check_jwt } from "./swApiCalls.js";
 
-const app = express();
+const router = express.Router();
 
 /*
 
@@ -37,7 +37,7 @@ const app = express();
 
 // In: { signalwire_token, space, project_id }
 // Out: { jwt } or 401
-app.post("/authenticate", async (req, res) => {
+router.post("/authenticate", async (req, res) => {
   const { token, projectid, space } = req.body;
   let jwt = await check_credentials({ token, projectid, space });
   console.log("--Generated JWT", jwt);
@@ -48,7 +48,7 @@ app.post("/authenticate", async (req, res) => {
 
 // In: { jwt }
 // Out: { valid: boolean }
-app.post("/check_jwt", async (req, res) => {
+router.post("/check_jwt", async (req, res) => {
   let jwt_from_client = req.body.jwt;
   console.log("--Checking JWT", jwt_from_client);
   let { valid, reason } = await check_jwt(jwt_from_client);
@@ -58,7 +58,7 @@ app.post("/check_jwt", async (req, res) => {
 
 // In: { jwt, roomParams: {from signalwire api} }
 // Out: { object from signalwire api } or 401
-app.post("/create_room", async (req, res) => {
+router.post("/create_room", async (req, res) => {
   const { jwt, roomParams } = req.body;
   let data = await create_room(jwt, roomParams);
   if (data === false) res.status(401).send("Unauthorized");
@@ -67,7 +67,7 @@ app.post("/create_room", async (req, res) => {
 
 // In: { jwt, room_id }
 // out: "OK" or 401
-app.post("/delete_room", async (req, res) => {
+router.post("/delete_room", async (req, res) => {
   const { jwt, roomid } = req.body;
   if ((await delete_room(jwt, roomid)) === false)
     res.status(401).send("Unauthorized");
@@ -76,7 +76,7 @@ app.post("/delete_room", async (req, res) => {
 
 // In: { space }
 // Out: [{ id, name, etc}]
-app.post("/get_public_rooms", async (req, res) => {
+router.post("/get_public_rooms", async (req, res) => {
   const { space } = req.body;
   let rooms = await get_public_rooms({ space });
   if (rooms === undefined || rooms === false)
@@ -86,7 +86,7 @@ app.post("/get_public_rooms", async (req, res) => {
 
 // In: { jwt }
 // Out: [{ id, name, etc}]
-app.post("/get_rooms", async (req, res) => {
+router.post("/get_rooms", async (req, res) => {
   const { jwt } = req.body;
   console.log("Jwt", jwt);
   let rooms = await get_rooms({ jwt });
@@ -96,7 +96,7 @@ app.post("/get_rooms", async (req, res) => {
 
 // In: { jwt }
 // Out: {data:[{cost_in_dollars, members, room_id, etc}], links: []}
-app.post("/get_room_sessions", async (req, res) => {
+router.post("/get_room_sessions", async (req, res) => {
   const { jwt } = req.body;
   let rooms = await get_room_sessions({ jwt });
   if (rooms === undefined) return res.status(401).send("Unauthorized");
@@ -105,7 +105,7 @@ app.post("/get_room_sessions", async (req, res) => {
 
 // In: { space }
 // Out: { activated: Boolean }
-app.post("/is_swrooms_activated", async (req, res) => {
+router.post("/is_swrooms_activated", async (req, res) => {
   let space = req.body.space;
   console.log(" - Checking activation state of", space);
   if (await is_activated(space)) res.json({ activated: true });
@@ -113,7 +113,7 @@ app.post("/is_swrooms_activated", async (req, res) => {
 });
 
 // In: { jwt, activate: Boolean }
-app.post("/activate_swrooms", async (req, res) => {
+router.post("/activate_swrooms", async (req, res) => {
   const { jwt, activate } = req.body;
 
   if (await activate_swrooms(jwt, activate)) {
@@ -122,7 +122,7 @@ app.post("/activate_swrooms", async (req, res) => {
 });
 
 // Endpoint to request token for video call
-app.post("/get_token", async (req, res) => {
+router.post("/get_token", async (req, res) => {
   let { user_name, room_name, mod, space } = req.body;
   console.log("Name: ", user_name, "Room: ", room_name, space);
 
@@ -158,4 +158,4 @@ app.post("/get_token", async (req, res) => {
   }
 });
 
-export default app;
+export default router;

@@ -59,7 +59,11 @@ async function get_token_from_jwt(jwt_from_client) {
     let projectid = decoded.projectid;
     if (space === undefined) return false;
     let credentials = await read_key(space);
-    if (projectid !== credentials.projectid) return false;
+    if (projectid !== credentials.projectid) {
+      console.log(projectid, credentials.projectid);
+      console.log("Credentials don't match");
+      return false;
+    }
     console.log(" - JWT is valid. Credentials found in database.", credentials);
     return { token: credentials.token, projectid, space };
   } catch (e) {

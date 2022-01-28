@@ -8,6 +8,7 @@ import cors from "cors";
 import http from "http";
 import { start_new_session, io_realtime } from "./backend/realtime.js";
 import routes from "./backend/routes/swRoutes.js";
+import publicRoutes from "./backend/routes/swPublicRoutes.js";
 
 import { read_db } from "./backend/databaseDriver.js";
 
@@ -21,6 +22,16 @@ const server = http.createServer(app);
 const io = io_realtime(server);
 
 app.use("/", routes);
+app.use("/public/", publicRoutes);
+
+if (process.env.ENVIRONMENT === "dev") {
+  console.log("Running in development mode.");
+  console.log(
+    " - making subdomains one leve shallower to understand localhost based domains"
+  );
+  // You're running this on localhost, so subdomains are on level shallower
+  app.set("subdomain offset", 1);
+} else console.log("Running in production mode");
 
 const root = path.join(path.resolve(), "video", "build");
 app.use(express.static(root));
