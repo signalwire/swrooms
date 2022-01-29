@@ -48,7 +48,6 @@ async function start_new_session({ projectid, token }) {
       "member.talking.ended",
       "member.left",
       "member.updated",
-      "room.updated",
     ].forEach((message) => {
       roomSession.on(message, (member) => {
         if (message === "member.updated") {
@@ -75,8 +74,6 @@ async function start_new_session({ projectid, token }) {
             onHold: member.onHold,
             session_id: roomSession.id,
           });
-        } else if (message === "room.updated") {
-          console.log(member);
         } else {
           notify(message, { id: member.id, session_id: roomSession.id });
         }
