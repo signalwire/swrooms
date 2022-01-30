@@ -25,9 +25,11 @@ export default function Participants({
     return (
       <Card>
         <Card.Header>Participants</Card.Header>
-        {memberList.map((member) => (
-          <ListGroup.Item key={member.id}>{member.name + " "}</ListGroup.Item>
-        ))}
+        {memberList
+          .sort((a, b) => (a?.name ?? "").localeCompare(b?.name ?? ""))
+          .map((member) => (
+            <ListGroup.Item key={member.id}>{member.name + " "}</ListGroup.Item>
+          ))}
       </Card>
     );
 
@@ -35,96 +37,102 @@ export default function Participants({
     <Card style={{ width: "100%" }}>
       <Card.Header>Participants</Card.Header>
       <ListGroup variant="flush">
-        {memberList.map((member) => (
-          <ListGroup.Item key={member.id} style={{ padding: "2px 0" }}>
-            <Container>
-              <Row>
-                <Col
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  {member.name + " "}
-                </Col>
-
-                <Col md="auto">
-                  <OverlayTrigger
-                    key={member.id + "aud"}
-                    placement="bottom"
-                    overlay={
-                      <Tooltip variant="info">
-                        {member.audio_muted ? "Unmute Audio" : "Mute Audio"}
-                      </Tooltip>
-                    }
+        {memberList
+          .sort((a, b) => (a?.name ?? "").localeCompare(b?.name ?? ""))
+          .map((member) => (
+            <ListGroup.Item key={member.id} style={{ padding: "2px 0" }}>
+              <Container>
+                <Row>
+                  <Col
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
                   >
-                    <Button
-                      style={{ padding: "2px 5px", marginLeft: 1 }}
-                      variant={!member.audio_muted ? "success" : "danger"}
-                      onClick={() => {
-                        member.audio_muted
-                          ? onMemberUpdate({
-                              action: "unmute_audio",
-                              id: member.id,
-                            })
-                          : onMemberUpdate({
-                              action: "mute_audio",
-                              id: member.id,
-                            });
-                      }}
-                    >
-                      {member.audio_muted ? <MdMic /> : <MdMicOff />}
-                    </Button>
-                  </OverlayTrigger>
+                    {member.name + " "}
+                  </Col>
 
-                  <OverlayTrigger
-                    key={member.id + "vid"}
-                    placement="bottom"
-                    overlay={
-                      <Tooltip variant="info">
-                        {member.video_muted ? "Unmute Video" : "Mute Video"}
-                      </Tooltip>
-                    }
-                  >
-                    <Button
-                      style={{ padding: "2px 5px", marginLeft: 1 }}
-                      variant={!member.video_muted ? "success" : "danger"}
-                      onClick={() => {
-                        member.video_muted
-                          ? onMemberUpdate({
-                              action: "unmute_video",
-                              id: member.id,
-                            })
-                          : onMemberUpdate({
-                              action: "mute_video",
-                              id: member.id,
-                            });
-                      }}
+                  <Col md="auto">
+                    <OverlayTrigger
+                      key={member.id + "aud"}
+                      placement="bottom"
+                      overlay={
+                        <Tooltip variant="info">
+                          {member.audio_muted ? "Unmute Audio" : "Mute Audio"}
+                        </Tooltip>
+                      }
                     >
-                      {member.video_muted ? <MdVideocam /> : <MdVideocamOff />}
-                    </Button>
-                  </OverlayTrigger>
+                      <Button
+                        style={{ padding: "2px 5px", marginLeft: 1 }}
+                        variant={!member.audio_muted ? "success" : "danger"}
+                        onClick={() => {
+                          member.audio_muted
+                            ? onMemberUpdate({
+                                action: "unmute_audio",
+                                id: member.id,
+                              })
+                            : onMemberUpdate({
+                                action: "mute_audio",
+                                id: member.id,
+                              });
+                        }}
+                      >
+                        {member.audio_muted ? <MdMic /> : <MdMicOff />}
+                      </Button>
+                    </OverlayTrigger>
 
-                  <OverlayTrigger
-                    key={member.id}
-                    placement="bottom"
-                    overlay={<Tooltip variant="info">Remove Member</Tooltip>}
-                  >
-                    <Button
-                      style={{ padding: "2px 5px", marginLeft: 1 }}
-                      variant="danger"
-                      onClick={() => {
-                        onMemberUpdate({ action: "remove", id: member.id });
-                      }}
+                    <OverlayTrigger
+                      key={member.id + "vid"}
+                      placement="bottom"
+                      overlay={
+                        <Tooltip variant="info">
+                          {member.video_muted ? "Unmute Video" : "Mute Video"}
+                        </Tooltip>
+                      }
                     >
-                      <MdCallEnd />
-                    </Button>
-                  </OverlayTrigger>
-                </Col>
-              </Row>
-            </Container>
-          </ListGroup.Item>
-        ))}
+                      <Button
+                        style={{ padding: "2px 5px", marginLeft: 1 }}
+                        variant={!member.video_muted ? "success" : "danger"}
+                        onClick={() => {
+                          member.video_muted
+                            ? onMemberUpdate({
+                                action: "unmute_video",
+                                id: member.id,
+                              })
+                            : onMemberUpdate({
+                                action: "mute_video",
+                                id: member.id,
+                              });
+                        }}
+                      >
+                        {member.video_muted ? (
+                          <MdVideocam />
+                        ) : (
+                          <MdVideocamOff />
+                        )}
+                      </Button>
+                    </OverlayTrigger>
+
+                    <OverlayTrigger
+                      key={member.id}
+                      placement="bottom"
+                      overlay={<Tooltip variant="info">Remove Member</Tooltip>}
+                    >
+                      <Button
+                        style={{ padding: "2px 5px", marginLeft: 1 }}
+                        variant="danger"
+                        onClick={() => {
+                          onMemberUpdate({ action: "remove", id: member.id });
+                        }}
+                      >
+                        <MdCallEnd />
+                      </Button>
+                    </OverlayTrigger>
+                  </Col>
+                </Row>
+              </Container>
+            </ListGroup.Item>
+          ))}
       </ListGroup>
     </Card>
   );
