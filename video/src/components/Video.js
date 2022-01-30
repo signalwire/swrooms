@@ -46,11 +46,13 @@ export default function Video({
             });
             console.log(room);
           } catch (e) {
-            console.log(e);
+            return console.log(e);
           }
           room.on("room.joined", async (e) => {
+            console.log("THE ROOM HAS BEEN JOINED");
             thisMemberId.current = e.member_id;
             memberList.current = e.room.members;
+            console.log("THE MEMBERS I KNOW ARE", memberList.current);
             let thisMember = memberList.current.find(
               (m) => m.id === e.member_id
             );
@@ -61,9 +63,11 @@ export default function Video({
             console.log(e.room.members);
             eventLogger("You have joined the room.");
           });
+
           room.on("room.updated", async (e) => {
             eventLogger("Room has been updated");
           });
+
           room.on("member.joined", async (e) => {
             eventLogger(e.member.name + " has joined the room.");
             memberList.current.push(e.member);

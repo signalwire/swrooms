@@ -136,7 +136,6 @@ export default function InCall({
               onRoomUpdate={onRoomUpdate}
               joinDetails={roomDetails}
               eventLogger={logEvent}
-              g
               width={0.65 * size.width}
               onMemberListUpdate={useCallback((list) => {
                 setMemberList(list);
