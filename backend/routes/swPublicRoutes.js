@@ -82,7 +82,7 @@ router.get("/rooms", async (req, res) => {
   }
 
   let data = await axios.get(
-    `https://${space}.signalwire.com/api/video/rooms`,
+    `https://${space}.signalwire.com/api/video/rooms?page_size=100`,
     {
       auth: { username: credentials.projectid, password: credentials.token },
     }
@@ -106,7 +106,7 @@ router.get("/room_recordings", async (req, res) => {
     return res.sendStatus(401);
   }
   let data = await axios.get(
-    `https://${space}.signalwire.com/api/video/room_recordings`,
+    `https://${space}.signalwire.com/api/video/room_recordings?page_size=100`,
     {
       auth: { username: credentials.projectid, password: credentials.token },
     }
