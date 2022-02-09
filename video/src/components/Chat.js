@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Widget, addResponseMessage } from "react-chat-widget";
 import "react-chat-widget/lib/styles.css";
+import "./Chat.css";
 import { get_chat_token } from "../Utils/apicalls";
 import { Chat } from "@signalwire/js";
 
@@ -50,6 +51,7 @@ export default function ChatWidget({ room_id, user_id, memberName }) {
           title=""
           subtitle=""
           showTimeStamp
+          launcherOpenImg="/chat.png"
           handleNewUserMessage={async (message) => {
             if (chatClient === null || chatClient === undefined) return;
             console.log(room_id);
