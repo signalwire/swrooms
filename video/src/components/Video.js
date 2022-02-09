@@ -44,6 +44,7 @@ export default function Video({
               video: true,
               audio: true,
             });
+            window.roomSession = room; //expose room session for debugging
             console.log(room);
           } catch (e) {
             return console.log(e);
