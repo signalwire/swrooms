@@ -27,7 +27,7 @@ router.post("/video_token", async (req, res) => {
   let space = get_space_name(req);
   if (space.error) {
     console.log(space.error);
-    return res.send(422);
+    return res.sendStatus(422);
   }
   space = space.space;
 
@@ -70,7 +70,7 @@ router.get("/rooms", async (req, res) => {
   let space = get_space_name(req);
   if (space.error) {
     console.log(space.error);
-    return res.send(422);
+    return res.sendStatus(422);
   }
   space = space.space;
   let credentials;
@@ -88,14 +88,14 @@ router.get("/rooms", async (req, res) => {
     }
   );
   console.log(data.data);
-  res.send(data.data);
+  res.json(data.data);
 });
 
 router.get("/room_recordings", async (req, res) => {
   let space = get_space_name(req);
   if (space.error) {
     console.log(space.error);
-    return res.send(422);
+    return res.sendStatus(422);
   }
   space = space.space;
   let credentials;
@@ -112,23 +112,23 @@ router.get("/room_recordings", async (req, res) => {
     }
   );
   console.log(data.data);
-  res.send(data.data);
+  res.json(data.data);
 });
 
 router.post("/chat_token", async (req, res) => {
   let { user_id, channels, ttl, state } = req.body;
-  if (
-    user_id === undefined ||
-    channels === undefined ||
-    ttl === undefined ||
-    state === undefined
-  ) {
+  console.log(" - chat_token");
+  console.log(req.body);
+  if (user_id === undefined) {
     return res.sendStatus(422);
   }
+  if (ttl === undefined) ttl = 3600;
+  if (state === undefined) state === [];
+  if (channels === undefined) channels = { guest: { read: true, write: true } };
   let space = get_space_name(req);
   if (space.error) {
     console.log(space.error);
-    return res.send(422);
+    return res.sendStatus(422);
   }
   space = space.space;
   let credentials;
@@ -145,6 +145,7 @@ router.post("/chat_token", async (req, res) => {
       `https://${space}.signalwire.com/api/chat/tokens`,
       {
         user_id,
+        member_id: user_id,
         channels,
         state,
         ttl,
