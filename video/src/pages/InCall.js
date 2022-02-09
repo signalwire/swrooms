@@ -11,6 +11,7 @@ import InviteButton from "../components/Invite.js";
 import Participants from "../components/Partcipants";
 import NavBar from "react-bootstrap/Navbar";
 import { Helmet } from "react-helmet";
+import Chat from "../components/Chat";
 import {
   MdMic,
   MdMicOff,
@@ -121,6 +122,11 @@ export default function InCall({
       <Helmet>
         <title>{roomDetails.room} - SignalWire Rooms</title>
       </Helmet>
+      <Chat
+        user_id={thisMemberId}
+        room_id={room?.roomId}
+        memberName={memberList?.find((x) => x.id === thisMemberId)?.name}
+      />
       <Container fluid>
         <Row className="mt-3">
           <Col

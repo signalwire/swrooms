@@ -107,6 +107,24 @@ async function get_token_for_video(roomDetails, space) {
     return false;
   }
 }
+async function get_chat_token(room_id, user_id) {
+  try {
+    console.log(user_id, room_id);
+    if (user_id === undefined || room_id === undefined) return false;
+    let data = {
+      user_id,
+      channels: { [room_id]: { read: true, write: true } },
+    };
+    console.log(data);
+
+    let token = await Axios.post(apiurl + "/public/chat_token", data);
+    console.log(token);
+    return token.data.token;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
 export {
   check_credentials,
   check_jwt,
@@ -118,4 +136,5 @@ export {
   delete_room,
   get_token_for_video,
   get_public_rooms,
+  get_chat_token,
 };
