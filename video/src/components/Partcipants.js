@@ -77,7 +77,7 @@ export default function Participants({
                               });
                         }}
                       >
-                        {member.audio_muted ? <MdMic /> : <MdMicOff />}
+                        {!member.audio_muted ? <MdMic /> : <MdMicOff />}
                       </Button>
                     </OverlayTrigger>
 
@@ -105,7 +105,7 @@ export default function Participants({
                               });
                         }}
                       >
-                        {member.video_muted ? (
+                        {!member.video_muted ? (
                           <MdVideocam />
                         ) : (
                           <MdVideocamOff />
