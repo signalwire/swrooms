@@ -33,8 +33,10 @@ if (process.env.ENVIRONMENT === "dev") {
   app.set("subdomain offset", 1);
 } else console.log("Running in production mode");
 
+const demoPath = path.join(path.resolve(), "sample_uses");
 const root = path.join(path.resolve(), "video", "build");
 app.use(express.static(root));
+app.use(express.static(demoPath));
 app.get("*", (req, res) => {
   res.sendFile("index.html", { root });
 });

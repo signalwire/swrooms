@@ -76,8 +76,7 @@ async function start_new_session({ projectid, token }) {
             session_id: roomSession.id,
           });
         } else if (message === "layout.changed") {
-          console.log(message);
-          console.log(member);
+          notify(message, {});
         } else {
           notify(message, { id: member.id, session_id: roomSession.id });
         }
@@ -120,6 +119,27 @@ function io_realtime(server) {
   });
   io.on("connection", async (socket) => {
     console.log(" - Socketio: Connected", socket.id);
+
+    socket.on("public_messages", async (data) => {
+      let projectid = data.projectid;
+      let space = data.space;
+      console.log(" - A public user has connected to Realtime");
+      console.log(" - with project ID", projectid, "and space", space);
+      let client = loggedClients[projectid]?.client;
+      if (client === undefined) {
+        console.log(" - No client found, notifying");
+        io.to(socket.id).emit("error", { message: "No client found" });
+        return;
+      } else {
+        console.log(" - client found");
+        io.to(socket.id).emit("connected", {});
+
+        loggedClients[projectid].notifyList[socket.id] = (message, obj) => {
+          console.log(message, obj, "sending to client");
+          io.to(socket.id).emit(message, obj);
+        };
+      }
+    });
 
     socket.once("credentials", async (data) => {
       if (data === null) return;

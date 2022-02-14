@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+      let projectid = prompt("Please enter your project id.");
+      let space = prompt("Please enter your space name.");
+      socket.on("connect", function () {
+        socket.emit("public_messages", { projectid, space });
+        [
+          "connected",
+          "room.started",
+          "room.ended",
+          "member.joined",
+          "member.left",
+          "member.talking.started",
+          "member.talking.ended",
+          "member.left",
+          "member.updated",
+          "layout.changed",
+        ].forEach((message) => {
+          socket.on(message, (d) => {
+            console.log(message, "fired.");
+            console.log(d);
+          });
+        });
+      });
+    </script>
+  </head>
+  <body>
+    Please check the console.
+  </body>
+</html>
