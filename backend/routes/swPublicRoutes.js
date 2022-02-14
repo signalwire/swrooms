@@ -124,7 +124,7 @@ router.get("/room_recordings", async (req, res) => {
 });
 
 router.post("/chat_token", async (req, res) => {
-  let { user_id, channels, ttl, state } = req.body;
+  let { member_id, channels, ttl, state } = req.body;
   console.log(" - chat_token");
   console.log(req.body);
   if (user_id === undefined) {
@@ -152,8 +152,7 @@ router.post("/chat_token", async (req, res) => {
     let token = await axios.post(
       `https://${space}.signalwire.com/api/chat/tokens`,
       {
-        user_id,
-        member_id: user_id,
+        member_id,
         channels,
         state,
         ttl,
