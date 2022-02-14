@@ -1,7 +1,6 @@
 import express from "express";
 import axios from "axios";
 import { moderatorPermissions, normalPermissions } from "../globals.js";
-import { read_key } from "../databaseDriver.js";
 import { get_space_credentials } from "./swApiCalls.js";
 
 const router = express.Router();
@@ -18,7 +17,15 @@ function get_space_name(req) {
 }
 
 router.post("/video_token", async (req, res) => {
-  let { user_name, room_name, mod } = req.body;
+  let { user_name, room_name, mod, enable_room_previews } = req.body;
+  if (
+    enable_room_previews === undefined ||
+    enable_room_previews === false ||
+    enable_room_previews === null
+  )
+    enable_room_previews = false;
+  else enable_room_previews = true;
+
   if (user_name === undefined || room_name === undefined) {
     console.log("Missing user_name or room_name");
     return res.sendStatus(422);
@@ -47,6 +54,7 @@ router.post("/video_token", async (req, res) => {
     let token = await axios.post(
       `https://${space}.signalwire.com/api/video/room_tokens`,
       {
+        enable_room_previews,
         user_name,
         room_name,
         permissions: mod
