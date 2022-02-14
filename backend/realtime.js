@@ -1,6 +1,10 @@
 import { Server } from "socket.io";
 import { createClient } from "@signalwire/realtime-api";
-import { get_token_from_jwt } from "./routes/swApiCalls.js";
+import {
+  get_space_credentials,
+  get_token_from_jwt,
+} from "./routes/swApiCalls.js";
+import { parseDomain, ParseResultType, fromUrl } from "parse-domain";
 
 let loggedClients = {};
 
@@ -121,10 +125,34 @@ function io_realtime(server) {
     console.log(" - Socketio: Connected", socket.id);
 
     socket.on("public_messages", async (data) => {
-      let projectid = data.projectid;
-      let space = data.space;
+      let hostname = socket.handshake.headers.host;
+      let space;
+      console.log(hostname);
+      let parseResult = parseDomain(fromUrl(hostname));
       console.log(" - A public user has connected to Realtime");
-      console.log(" - with project ID", projectid, "and space", space);
+      if (parseResult.type === ParseResultType.Listed) {
+        const { subdomains, domain, topLevelDomains } = parseResult;
+        if (subdomains.length === 1) {
+          console.log(" - The space is ", subdomains[1]);
+          space = subdomains[1];
+        } else {
+          return console.log(" - Space not found in host");
+        }
+      } else if (parseResult.type === ParseResultType.Reserved) {
+        if (parseResult.labels.length === 2) {
+          console.log(" - The localhost space is", parseResult.labels[0]);
+          space = parseResult.labels[0];
+        } else return console.log(" - Space not found in host");
+      } else return console.log(" - Domain not recognised");
+
+      let credentials;
+      try {
+        credentials = await get_space_credentials(space);
+      } catch (e) {
+        return console.log(e);
+      }
+      let { projectid } = credentials;
+
       let client = loggedClients[projectid]?.client;
       if (client === undefined) {
         console.log(" - No client found, notifying");

@@ -4,10 +4,8 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
       var socket = io();
-      let projectid = prompt("Please enter your project id.");
-      let space = prompt("Please enter your space name.");
       socket.on("connect", function () {
-        socket.emit("public_messages", { projectid, space });
+        socket.emit("public_messages");
         [
           "connected",
           "room.started",
