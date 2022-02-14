@@ -124,12 +124,9 @@ router.get("/room_recordings", async (req, res) => {
 });
 
 router.post("/chat_token", async (req, res) => {
-  let { user_id, channels, ttl, state } = req.body;
+  let { member_id, channels, ttl, state } = req.body;
   console.log(" - chat_token");
   console.log(req.body);
-  if (user_id === undefined) {
-    return res.sendStatus(422);
-  }
   if (ttl === undefined) ttl = 3600;
   if (state === undefined) state === [];
   if (channels === undefined) channels = { guest: { read: true, write: true } };
@@ -152,8 +149,7 @@ router.post("/chat_token", async (req, res) => {
     let token = await axios.post(
       `https://${space}.signalwire.com/api/chat/tokens`,
       {
-        user_id,
-        member_id: user_id,
+        member_id,
         channels,
         state,
         ttl,
