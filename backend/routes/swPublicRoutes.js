@@ -127,9 +127,7 @@ router.post("/chat_token", async (req, res) => {
   let { member_id, channels, ttl, state } = req.body;
   console.log(" - chat_token");
   console.log(req.body);
-  if (user_id === undefined) {
-    return res.sendStatus(422);
-  }
+  
   if (ttl === undefined) ttl = 3600;
   if (state === undefined) state === [];
   if (channels === undefined) channels = { guest: { read: true, write: true } };
