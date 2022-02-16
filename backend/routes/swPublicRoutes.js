@@ -99,6 +99,31 @@ router.get("/rooms", async (req, res) => {
   res.json(data.data);
 });
 
+router.get("/room_sessions", async (req, res) => {
+  let space = get_space_name(req);
+  if (space.error) {
+    console.log(space.error);
+    return res.sendStatus(422);
+  }
+  space = space.space;
+  let credentials;
+  try {
+    credentials = await get_space_credentials(space);
+  } catch (e) {
+    console.log(" - credentials not found for space", space);
+    return res.sendStatus(401);
+  }
+
+  let data = await axios.get(
+    `https://${space}.signalwire.com/api/video/room_sessions?page_size=100`,
+    {
+      auth: { username: credentials.projectid, password: credentials.token },
+    }
+  );
+  console.log(data.data);
+  res.json(data.data);
+});
+
 router.get("/room_recordings", async (req, res) => {
   let space = get_space_name(req);
   if (space.error) {

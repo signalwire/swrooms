@@ -124,50 +124,7 @@ function io_realtime(server) {
   io.on("connection", async (socket) => {
     console.log(" - Socketio: Connected", socket.id);
 
-    socket.on("public_messages", async (data) => {
-      let hostname = socket.handshake.headers.host;
-      let space;
-      console.log(hostname);
-      let parseResult = parseDomain(fromUrl(hostname));
-      console.log(" - A public user has connected to Realtime");
-      if (parseResult.type === ParseResultType.Listed) {
-        const { subDomains } = parseResult;
-        if (subDomains.length === 1) {
-          console.log(" - The space is ", subDomains[1]);
-          space = subDomains[1];
-        } else {
-          return console.log(" - Space not found in host");
-        }
-      } else if (parseResult.type === ParseResultType.Reserved) {
-        if (parseResult.labels.length === 2) {
-          console.log(" - The localhost space is", parseResult.labels[0]);
-          space = parseResult.labels[0];
-        } else return console.log(" - Space not found in host");
-      } else return console.log(" - Domain not recognised");
-
-      let credentials;
-      try {
-        credentials = await get_space_credentials(space);
-      } catch (e) {
-        return console.log(e);
-      }
-      let { projectid } = credentials;
-
-      let client = loggedClients[projectid]?.client;
-      if (client === undefined) {
-        console.log(" - No client found, notifying");
-        io.to(socket.id).emit("error", { message: "No client found" });
-        return;
-      } else {
-        console.log(" - client found");
-        io.to(socket.id).emit("connected", {});
-
-        loggedClients[projectid].notifyList[socket.id] = (message, obj) => {
-          console.log(message, obj, "sending to client");
-          io.to(socket.id).emit(message, obj);
-        };
-      }
-    });
+    initPublicNamespace(socket, io);
 
     socket.once("credentials", async (data) => {
       if (data === null) return;
@@ -266,10 +223,67 @@ function io_realtime(server) {
 
       socket.on("disconnect", () => {
         console.log(" - Socketio: Disonnected", socket.id);
-        delete loggedClients[token.projectid].notifyList[socket.id];
+        delete loggedClients[token.projectid]?.notifyList[socket.id];
       });
     });
   });
 }
 
 export { io_realtime, start_new_session, stop_session };
+async function get_room_sessions(space, credentials) {
+  let data = await axios.get(
+    `https://${space}.signalwire.com/api/video/room_sessions?page_size=100`,
+    {
+      auth: { username: credentials.projectid, password: credentials.token },
+    }
+  );
+  console.log(data.data);
+  return data.data.data;
+}
+function initPublicNamespace(socket, io) {
+  socket.on("public_messages", async (data) => {
+    let hostname = socket.handshake.headers.host;
+    let space;
+    console.log(hostname);
+    let parseResult = parseDomain(fromUrl(hostname));
+    console.log(" - A public user has connected to Realtime");
+    if (parseResult.type === ParseResultType.Listed) {
+      const { subDomains } = parseResult;
+      if (subDomains.length === 1) {
+        console.log(" - The space is ", subDomains[1]);
+        space = subDomains[1];
+      } else {
+        return console.log(" - Space not found in host");
+      }
+    } else if (parseResult.type === ParseResultType.Reserved) {
+      if (parseResult.labels.length === 2) {
+        console.log(" - The localhost space is", parseResult.labels[0]);
+        space = parseResult.labels[0];
+      } else return console.log(" - Space not found in host");
+    } else return console.log(" - Domain not recognised");
+
+    let credentials;
+    try {
+      credentials = await get_space_credentials(space);
+    } catch (e) {
+      return console.log(e);
+    }
+    let { projectid } = credentials;
+
+    let client = loggedClients[projectid]?.client;
+    if (client === undefined) {
+      console.log(" - No client found, notifying");
+      io.to(socket.id).emit("error", { message: "No client found" });
+      return;
+    } else {
+      console.log(" - client found");
+      io.to(socket.id).emit("connected", {});
+
+      loggedClients[projectid].notifyList[socket.id] = async (message, obj) => {
+        obj.roomSessions = await get_room_sessions(space, credentals);
+        console.log(message, obj, "sending to client");
+        io.to(socket.id).emit(message, obj);
+      };
+    }
+  });
+}
