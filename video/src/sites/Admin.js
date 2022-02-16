@@ -115,9 +115,9 @@ function Admin() {
         if (room) {
           let member = room.members.find((x) => x.id === obj.id);
           if (member) {
-            member.audioMuted = obj.audioMuted;
-            member.deaf = obj.deaf;
-            member.videoMuted = obj.videoMuted;
+            member.audioMuted = obj.audioMuted ?? member.audioMuted;
+            member.deaf = obj.deaf ?? member.deaf;
+            member.videoMuted = obj.videoMuted ?? member.videoMuted;
             return [...rs];
           } else {
             console.log("Member doesn't exist. Doing nothing");

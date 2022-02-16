@@ -131,10 +131,10 @@ function io_realtime(server) {
       let parseResult = parseDomain(fromUrl(hostname));
       console.log(" - A public user has connected to Realtime");
       if (parseResult.type === ParseResultType.Listed) {
-        const { subdomains, domain, topLevelDomains } = parseResult;
-        if (subdomains.length === 1) {
-          console.log(" - The space is ", subdomains[1]);
-          space = subdomains[1];
+        const { subDomains } = parseResult;
+        if (subDomains.length === 1) {
+          console.log(" - The space is ", subDomains[1]);
+          space = subDomains[1];
         } else {
           return console.log(" - Space not found in host");
         }

@@ -201,6 +201,7 @@ export default function ActiveRooms({
                         muteIcon={() => <MdVolumeOff />}
                         unmuteIcon={() => <MdVolumeUp />}
                         setMuted={async (value) => {
+                          console.log("muting");
                           if (value) {
                             socket.emit("deaf", {
                               id: member.id,

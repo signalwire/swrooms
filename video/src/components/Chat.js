@@ -27,6 +27,7 @@ export default function ChatWidget({ room_id, user_id, memberName }) {
       window.chatClient = chatClient;
 
       chatClient.on("message", (message) => {
+        console.log("Message has arrived", message);
         let content = message.content;
         let sender_id = message.member.id;
         if (user_id === sender_id) return;
@@ -34,6 +35,13 @@ export default function ChatWidget({ room_id, user_id, memberName }) {
       });
 
       await chatClient.subscribe(room_id);
+
+      const history = await chatClient.getMessages({ channel: room_id });
+      history.messages.reverse().forEach((message) => {
+        addResponseMessage(message.content);
+      });
+      console.log(history);
+
       setLoading(false);
     }
     try {
@@ -41,6 +49,12 @@ export default function ChatWidget({ room_id, user_id, memberName }) {
     } catch (e) {
       console.log(e);
     }
+    return () => {
+      setChatClient((chatClient) => {
+        chatClient && chatClient.unsubscribe(room_id);
+        return null;
+      });
+    };
   }, [room_id, user_id]);
   return (
     <>

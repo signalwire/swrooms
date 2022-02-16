@@ -112,7 +112,7 @@ async function get_chat_token(room_id, user_id) {
     console.log(user_id, room_id);
     if (user_id === undefined || room_id === undefined) return false;
     let data = {
-      user_id,
+      member_id: user_id,
       channels: { [room_id]: { read: true, write: true } },
     };
     console.log(data);
