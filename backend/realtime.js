@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+import axios from "axios";
 import { createClient } from "@signalwire/realtime-api";
 import {
   get_space_credentials,
@@ -68,6 +69,7 @@ async function start_new_session({ projectid, token }) {
           console.log(obj);
           notify(message, obj);
         } else if (message === "member.joined") {
+          roomSession.deaf({ memberId: member.id });
           notify(message, {
             id: member.id,
             room_id: member.roomId,
@@ -92,7 +94,7 @@ async function start_new_session({ projectid, token }) {
 
   client.video.on("room.ended", async (roomSession) => {
     console.log("\nRoom ended", roomSession.displayName);
-    notify("room.ended", roomSession.id, function cleanup() {
+    notify("room.ended", { id: roomSession.id }, function cleanup() {
       let index = loggedClients[projectid].roomSessions.findIndex(
         (room) => room.id === roomSession.id
       );
@@ -232,7 +234,7 @@ function io_realtime(server) {
 export { io_realtime, start_new_session, stop_session };
 async function get_room_sessions(space, credentials) {
   let data = await axios.get(
-    `https://${space}.signalwire.com/api/video/room_sessions?page_size=100`,
+    `https://${space}.signalwire.com/api/video/room_sessions?page_size=100&status=in-progress`,
     {
       auth: { username: credentials.projectid, password: credentials.token },
     }
@@ -280,7 +282,7 @@ function initPublicNamespace(socket, io) {
       io.to(socket.id).emit("connected", {});
 
       loggedClients[projectid].notifyList[socket.id] = async (message, obj) => {
-        obj.roomSessions = await get_room_sessions(space, credentals);
+        obj.roomSessions = await get_room_sessions(space, credentials);
         console.log(message, obj, "sending to client");
         io.to(socket.id).emit(message, obj);
       };

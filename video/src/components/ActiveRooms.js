@@ -71,7 +71,7 @@ export default function ActiveRooms({
           onRoomSessionUpdate("member.updated", obj);
         } else if (message === "room.ended") {
           console.log("Room ended", obj);
-          onRoomSessionUpdate("room.ended", { sessionId: obj });
+          onRoomSessionUpdate("room.ended", { sessionId: obj.id });
         } else if (message === "room.started") {
           console.log("Room started", obj);
           onRoomSessionUpdate("room.started", { ...obj });
