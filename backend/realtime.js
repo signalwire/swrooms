@@ -250,8 +250,8 @@ function initPublicNamespace(socket, io) {
     if (parseResult.type === ParseResultType.Listed) {
       const { subDomains } = parseResult;
       if (subDomains.length === 1) {
-        console.log(" - The space is ", subDomains[1]);
-        space = subDomains[1];
+        console.log(" - The space is ", subDomains[0]);
+        space = subDomains[0];
       } else {
         return console.log(" - Space not found in host");
       }
