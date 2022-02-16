@@ -69,7 +69,6 @@ async function start_new_session({ projectid, token }) {
           console.log(obj);
           notify(message, obj);
         } else if (message === "member.joined") {
-          roomSession.deaf({ memberId: member.id });
           notify(message, {
             id: member.id,
             room_id: member.roomId,
@@ -282,7 +281,12 @@ function initPublicNamespace(socket, io) {
       io.to(socket.id).emit("connected", {});
 
       loggedClients[projectid].notifyList[socket.id] = async (message, obj) => {
-        obj.roomSessions = await get_room_sessions(space, credentials);
+        if (
+          !["member.talking.started", "member.talking.stopped"].includes(
+            message
+          )
+        )
+          obj.roomSessions = await get_room_sessions(space, credentials);
         console.log(message, obj, "sending to client");
         io.to(socket.id).emit(message, obj);
       };
