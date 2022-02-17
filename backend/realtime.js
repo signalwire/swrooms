@@ -278,7 +278,9 @@ function initPublicNamespace(socket, io) {
       return;
     } else {
       console.log(" - client found");
-      io.to(socket.id).emit("connected", {});
+      let obj = {};
+      obj.roomSessions = await get_room_sessions(space, credentials);
+      io.to(socket.id).emit("rooms_updated", obj);
 
       loggedClients[projectid].notifyList[socket.id] = async (message, obj) => {
         if (
@@ -287,8 +289,8 @@ function initPublicNamespace(socket, io) {
           )
         )
           obj.roomSessions = await get_room_sessions(space, credentials);
-        console.log(message, obj, "sending to client");
-        io.to(socket.id).emit(message, obj);
+        console.log("rooms_updated", obj, "sending to client");
+        io.to(socket.id).emit("rooms_updated", obj);
       };
     }
   });

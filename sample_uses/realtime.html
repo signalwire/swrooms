@@ -7,13 +7,12 @@
       socket.on("connect", function () {
         socket.emit("public_messages");
         [
+          "rooms_updated",
           "connected",
           "room.started",
           "room.ended",
           "member.joined",
           "member.left",
-          "member.talking.started",
-          "member.talking.ended",
           "member.left",
           "member.updated",
           "layout.changed",
