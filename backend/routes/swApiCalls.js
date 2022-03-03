@@ -1,6 +1,7 @@
 import axios from "axios";
 import jwt from "jsonwebtoken";
-import { read_key, append_key } from "../databaseDriver.js";
+// import { read_key, append_key } from "../databaseDriver.js";
+import { read_key, append_key } from "../databaseDriverPostgres.js";
 import { start_new_session, stop_session } from "../realtime.js";
 
 async function check_credentials({ token, projectid, space }) {

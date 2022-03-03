@@ -35,4 +35,6 @@ async function read_key(key) {
   return db.data[key];
 }
 
-export { write_db, read_db, append_key, read_key };
+async function init() {}
+
+export { init, write_db, read_db, append_key, read_key };

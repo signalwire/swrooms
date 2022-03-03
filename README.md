@@ -15,6 +15,9 @@ SignalWire Node.js Realtime SDK for video.
 2. Install the npm packages for both the backend and frontend: `yarn install && cd video && yarn install && cd ..`
 3. Set up the environment variables `.env` and `video/.env`. You can use the `.env.sample` files as reference.  
    For backend the `.env.sample` is right at the root of the repo. Only one variable is essential for you to set: `JWT_SECRET`. Make it a strong, random, unique password. Then you can `mv env.sample .env` to situate the file.  
+   If you'd like, you can set up a Postgres database using the env variables in `.env.sample`, which will make the system use a postgres database instead
+   of the fallback file database.
+
    For the frontend, the `.env.sample` file is in `video` folder. You don’t necessarily need to change anything here, just `mv env.sample .env`. If you ever have to host the backend on a separate URL, keep that URL at `REACT_APP_API_URL`.
 
 4. Finally, if you’d like to just give it a whirl, cd into the root of the repo and go `yarn prod`. It’ll build the frontend and serve it via the backend. It will be available at [`localhost:5000`](http://localhost:5000) or whatever port you’ve set.  

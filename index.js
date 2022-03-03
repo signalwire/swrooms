@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+dotenv.config();
 import path from "path";
 
 import express from "express";
@@ -10,9 +11,8 @@ import { start_new_session, io_realtime } from "./backend/realtime.js";
 import routes from "./backend/routes/swRoutes.js";
 import publicRoutes from "./backend/routes/swPublicRoutes.js";
 
-import { read_db } from "./backend/databaseDriver.js";
-
-dotenv.config();
+// import { read_db } from "./backend/databaseDriver.js";
+import { read_db } from "./backend/databaseDriverPostgres.js";
 
 const app = express();
 app.use(bodyParser.json());

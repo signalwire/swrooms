@@ -51,7 +51,6 @@ async function start_new_session({ projectid, token }) {
       "member.left",
       "member.talking.started",
       "member.talking.ended",
-      "member.left",
       "member.updated",
       "layout.changed",
     ].forEach((message) => {
