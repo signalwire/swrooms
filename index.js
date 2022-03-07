@@ -17,6 +17,7 @@ import { read_db } from "./backend/databaseDriverPostgres.js";
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
+app.set('trust proxy', 'loopback')
 
 const server = http.createServer(app);
 const io = io_realtime(server);
