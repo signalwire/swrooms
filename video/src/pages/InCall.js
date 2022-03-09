@@ -11,7 +11,8 @@ import InviteButton from "../components/Invite.js";
 import Participants from "../components/Partcipants";
 import NavBar from "react-bootstrap/Navbar";
 import { Helmet } from "react-helmet";
-import Chat from "../components/Chat";
+// import Chat from "../components/Chat";
+import Chat from "../components/Chat/Chat.js";
 import {
   MdMic,
   MdMicOff,
@@ -26,6 +27,7 @@ import SplitButtonMenu from "../components/SplitButton.js";
 import ScreenShareButton from "../components/ShareScreenButton";
 import useScreenSize from "use-screen-size";
 import isObjEmpty from "../Utils/isObjEmpty";
+import ChatController from "../components/Chat/ChatController";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -122,10 +124,17 @@ export default function InCall({
       <Helmet>
         <title>{roomDetails.room} - SignalWire Rooms</title>
       </Helmet>
-      <Chat
+      {/* <Chat
         user_id={thisMemberId}
         room_id={room?.roomId}
         memberName={memberList?.find((x) => x.id === thisMemberId)?.name}
+
+      /> */}
+      <ChatController
+        user_id={thisMemberId}
+        room_id={room?.roomId}
+        memberName={memberList?.find((x) => x.id === thisMemberId)?.name}
+        memberNames={memberList?.map((x) => ({ name: x.name, id: x.id }))}
       />
       <Container fluid>
         <Row className="mt-3">
