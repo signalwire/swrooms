@@ -11,6 +11,9 @@ import Col from "react-bootstrap/Col";
 function Register() {
   const [spaceName, setSpaceName] = useState("");
   const [admin, setAdmin] = useState(false);
+
+  const getUsernameFromSpaceName = (s) => s.split('.')[0]
+
   return (
     <>
       <Header />
@@ -58,9 +61,9 @@ function Register() {
                 onClick={() => {
                   if (spaceName !== "") {
                     if (admin)
-                      window.location.href = `${window.location.protocol}//${spaceName}.${window.location.host}/admin`;
+                      window.location.href = `${window.location.protocol}//${getUsernameFromSpaceName(spaceName)}.${window.location.host}/admin`;
                     else
-                      window.location.href = `${window.location.protocol}//${spaceName}.${window.location.host}/`;
+                      window.location.href = `${window.location.protocol}//${getUsernameFromSpaceName(spaceName)}.${window.location.host}/`;
                   } else {
                     alert("Please fill all fields.");
                   }
