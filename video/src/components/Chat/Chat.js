@@ -159,15 +159,7 @@ export default function Chat({
         }}
         disabled={loading}
       >
-        {loading ? (
-          <>
-            <MdRefresh />
-          </>
-        ) : chatOn ? (
-          <MdClose />
-        ) : (
-          <MdChat />
-        )}
+        {loading ? <MdRefresh /> : chatOn ? <MdClose /> : <MdChat />}
       </Button>
     </>
   );

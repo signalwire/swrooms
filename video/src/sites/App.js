@@ -18,6 +18,11 @@ import Admin from "./Admin.js";
 import { get_public_rooms, is_activated } from "../Utils/apicalls.js";
 import NotActivated from "../components/NotActivated.js";
 import { Helmet } from "react-helmet";
+import Rooms from "../components/Explorer/Rooms.js";
+import Chat from "../components/Chat/Chat.js";
+import ChatController from "../components/Chat/ChatController.js";
+import ChatInput from "../components/Chat/ChatInput.js";
+import TypingDots from "../components/Chat/TypingDots.js";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -26,6 +31,8 @@ function useQuery() {
 function VideoApp({ space }) {
   let query = useQuery();
   let history = useHistory();
+
+  let [typing, setTyping] = useState(false);
   let [roomDetails, setRoomDetails] = useState({});
 
   let [activated, setActivated] = useState(false);
@@ -91,12 +98,29 @@ function VideoApp({ space }) {
           <Admin />
         </Route>
 
+        <Route path="/chat_test">
+          {/* <ChatController /> */}
+          <>
+            {typing && <TypingDots />}
+
+            <ChatInput
+              onTyping={(typing) => {
+                setTyping(typing);
+              }}
+            />
+          </>
+        </Route>
+
         <Route path="/admin_login">
           <AdminLogin space={space} />
         </Route>
 
+        <Route path="/rooms">
+          {space === undefined ? <Redirect to="/" /> : <Rooms space={space} />}
+        </Route>
+
         <Route path="/in-call">
-          {roomDetails.name === undefined || roomDetails.room === undefined ? (
+          {roomDetails.name == undefined || roomDetails.room === undefined ? (
             <Redirect to="/" />
           ) : (
             <InCall
