@@ -230,15 +230,28 @@ function io_realtime(server) {
 }
 
 export { io_realtime, start_new_session, stop_session };
+let cache = {};
 async function get_room_sessions(space, credentials) {
-  let data = await axios.get(
-    `https://${space}.signalwire.com/api/video/room_sessions?page_size=100&status=in-progress`,
-    {
-      auth: { username: credentials.projectid, password: credentials.token },
-    }
-  );
-  console.log(data.data);
-  return data.data.data;
+  if ((+new Date() - cache.time ?? Infinity) < 5000) {
+    console.log(
+      "Cache triggered",
+      +new Date(),
+      cache.time,
+      (+new Date() - cache.time) / 1000
+    );
+    return cache.data.data.data;
+  } else {
+    console.log("Getting new data", +new Date() - cache.time);
+    let data = await axios.get(
+      `https://${space}.signalwire.com/api/video/room_sessions?page_size=100&status=in-progress`,
+      {
+        auth: { username: credentials.projectid, password: credentials.token },
+      }
+    );
+    cache = { time: +new Date(), data };
+    // console.log(data.data);
+    return data.data.data;
+  }
 }
 function initPublicNamespace(socket, io) {
   socket.on("public_messages", async (data) => {
@@ -283,12 +296,16 @@ function initPublicNamespace(socket, io) {
 
       loggedClients[projectid].notifyList[socket.id] = async (message, obj) => {
         if (
-          !["member.talking.started", "member.talking.stopped"].includes(
-            message
-          )
+          [
+            "member.talking.started",
+            "member.talking.stopped",
+            "member.talking",
+          ].includes(message)
         )
-          obj.roomSessions = await get_room_sessions(space, credentials);
-        console.log("rooms_updated", obj, "sending to client");
+          return;
+        console.log("message got:", message);
+        obj.roomSessions = await get_room_sessions(space, credentials);
+        // console.log("rooms_updated", obj, "sending to client");
         io.to(socket.id).emit("rooms_updated", obj);
       };
     }
