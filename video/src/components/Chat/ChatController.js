@@ -12,6 +12,7 @@ export default function ChatController({
   let [chatClient, setChatClient] = useState(null);
   const [typing, setTyping] = useState(false);
   const [typingPeople, setTypingPeople] = useState([]);
+  const [scrollChatBottom, setScrollChatBottom] = useState(false);
   let [loading, setLoading] = useState(true);
   //   const [messages, setMessages] = useState([]);
   let [messages, setMessages] = useState([]);
@@ -65,7 +66,11 @@ export default function ChatController({
         setTyping(member.state.typing);
       });
 
-      await chatClient.subscribe(room_id);
+      try {
+        await chatClient.subscribe(room_id);
+      } catch (e) {
+        console.log(e);
+      }
 
       const history = await chatClient.getMessages({ channel: room_id });
       history.messages.reverse().forEach((message) => {
@@ -77,6 +82,7 @@ export default function ChatController({
         console.log("history", message);
         message.member.name = sender_name;
         setMessages((m) => [...m, message]);
+        setScrollChatBottom((x) => !x);
       });
       console.log(history);
 
@@ -97,6 +103,7 @@ export default function ChatController({
 
   return (
     <ChatWidget
+      scrollChatBottom={scrollChatBottom}
       loading={loading}
       typing={typing}
       onNewMessage={async (m) => {

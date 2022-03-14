@@ -14,6 +14,7 @@ export default function Chat({
   onTyping = () => {}, // user is typing
   canLoadMore = false,
   loading = true,
+  scrollChatBottom,
 }) {
   let [chatOn, setChatOn] = useState(true);
   const [loadMoreIntensity, setLoadMoreIntensity] = useState(1);
@@ -34,24 +35,18 @@ export default function Chat({
 
   useEffect(() => {
     if (chatTextContainer.current === null) return;
+    console.log("Scrolling to Bottom");
+    chatTextContainer.current.scrollTop =
+      chatTextContainer.current.scrollHeight;
+
     function scrollToBottom() {
-      if (chatTextContainer) {
-        chatTextContainer.current.scrollTop =
-          chatTextContainer.current.scrollHeight;
-      }
-    }
-    function hasScrollbar() {
-      if (!chatTextContainer) return false;
-      const hasScrollbar =
-        chatTextContainer.current.scrollHeight >
-        chatTextContainer.current.clientHeight;
-      return hasScrollbar;
+      // if (chatTextContainer.current) {
+      chatTextContainer.current.scrollTop =
+        chatTextContainer.current.scrollHeight;
+      // }
     }
     scrollToBottom();
-
-    if (hasScrollbar()) {
-    }
-  }, [messages]);
+  }, [messages, scrollChatBottom]);
 
   let chatTextContainer = useRef(null);
 
