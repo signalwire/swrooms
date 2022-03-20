@@ -1,0 +1,6 @@
+.room-preview-card {
+}
+.room-preview-card:hover {
+  background-color: #eeeeee;
+  cursor: pointer;
+}

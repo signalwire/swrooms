@@ -10,7 +10,7 @@ import {
   Redirect,
 } from "react-router-dom";
 
-import JoinCallForm from "../components/JoinCallForm.js";
+import JoinCallForm from "../components/Explorer/JoinCallForm.js";
 import InviteForm from "../components/InviteForm";
 import InCall from "../pages/InCall.js";
 import AdminLogin from "./AdminLogin.js";
@@ -19,10 +19,9 @@ import { get_public_rooms, is_activated } from "../Utils/apicalls.js";
 import NotActivated from "../components/NotActivated.js";
 import { Helmet } from "react-helmet";
 import Rooms from "../components/Explorer/Rooms.js";
-import Chat from "../components/Chat/Chat.js";
-import ChatController from "../components/Chat/ChatController.js";
 import ChatInput from "../components/Chat/ChatInput.js";
 import TypingDots from "../components/Chat/TypingDots.js";
+import ManualJoin from "../components/Explorer/ManualJoin.js";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -56,7 +55,7 @@ function VideoApp({ space }) {
     is_space_activated();
 
     async function is_space_activated() {
-      if (location.pathname !== "/") {
+      if (location.pathname !== "/" && location.pathname !== "/manual_join") {
         // no need to perform this check if not homepage
         return;
       }
@@ -142,6 +141,26 @@ function VideoApp({ space }) {
               history.push("/in-call");
             }}
           />
+        </Route>
+        <Route path="/manual_join">
+          {loading ? (
+            <NotActivated loading />
+          ) : activated ? (
+            <>
+              <ManualJoin
+                rooms={activatedRooms}
+                space={space}
+                onJoin={({ room, name }) => {
+                  console.log(name, room);
+                  setRoomDetails({ name, room, mod: true });
+                  console.log(history);
+                  history.push("/in-call");
+                }}
+              />
+            </>
+          ) : (
+            <NotActivated />
+          )}
         </Route>
         <Route path="/">
           {loading ? (

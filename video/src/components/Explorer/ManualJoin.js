@@ -4,9 +4,9 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Select from "./Select";
+import RoomSelector from "./RoomSelector";
 
-export default function JoinCallForm({
+export default function ManualJoin({
   onJoin = () => {},
   rooms = ["guest"],
   space,
@@ -16,15 +16,16 @@ export default function JoinCallForm({
 
   return (
     <Container>
-      <Row className="justify-content-md-center">
+      <Row className="justify-content-md-center" style={{}}>
         <Col lg={4} className="mt-5 mb-2">
-          <h3>Join a Room</h3>
+          <h3>Manually join a room</h3>
           <p>
             Welcome to{" "}
             <span style={{ fontWeight: "bold", color: "#f72b73" }}>
               {space}
             </span>
-            's video-calling platform.
+            's video-calling platform. Join an existing room or make a new one
+            here.
           </p>
           <Form onSubmit={(e) => e.preventDefault()}>
             <Form.Group className="mb-3" controlId="VideoCallName">
@@ -40,7 +41,7 @@ export default function JoinCallForm({
 
             <Form.Group className="mb-3" controlId="VideoRoom">
               <Form.Label>Room Name</Form.Label>
-              <Select
+              <RoomSelector
                 items={rooms}
                 value={selectedRoom}
                 onChange={(v) => setSelectedRoom(v)}
