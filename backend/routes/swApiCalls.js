@@ -13,6 +13,8 @@ async function check_credentials({ token, projectid, space }) {
         auth: { username: projectid, password: token },
       }
     );
+    console.log(token, projectid);
+    console.log("testing response", response.data, response.status);
 
     let userData = await read_key(space);
     if (userData === null || userData === undefined) {
@@ -145,7 +147,7 @@ async function get_public_rooms({ space }) {
 
 async function get_rooms({ jwt: jwt_from_client }) {
   let { token, projectid, space } = await get_token_from_jwt(jwt_from_client);
-  if (token === false) {
+  if (token === false || space === undefined) {
     return false;
   }
   console.log(" - Getting rooms for space", space);

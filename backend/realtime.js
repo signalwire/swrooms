@@ -298,7 +298,7 @@ function initPublicNamespace(socket, io) {
         if (
           [
             "member.talking.started",
-            "member.talking.stopped",
+            "member.talking.ended",
             "member.talking",
           ].includes(message)
         )

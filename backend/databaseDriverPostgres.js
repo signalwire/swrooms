@@ -7,9 +7,10 @@ import {
   read_db as fallback_read_db,
   append_key as fallback_append_key,
   read_key as fallback_read_key,
+  delete_key as fallback_delete_key,
 } from "./databaseDriver.js";
 
-let init, read_db, append_key, read_key;
+let init, read_db, append_key, read_key, delete_key;
 
 if (process.env.DB_PASSWORD === undefined) {
   console.log("No Database found. Falling back to file database");
@@ -17,6 +18,7 @@ if (process.env.DB_PASSWORD === undefined) {
   read_db = fallback_read_db;
   append_key = fallback_append_key;
   read_key = fallback_read_key;
+  delete_key = fallback_delete_key;
 } else {
   const { Pool } = pg;
 
@@ -58,6 +60,24 @@ if (process.env.DB_PASSWORD === undefined) {
           data[item.space] = item;
         });
         resolve(data);
+      });
+    });
+  };
+
+  delete_key = async function delete_key(key) {
+    return new Promise((resolve, reject) => {
+      let query = {
+        name: "delete_key",
+        text: `DELETE FROM tokens WHERE space = $1;`,
+        values: [key],
+      };
+      pool.query(query, (err, res) => {
+        if (err) {
+          console.log("Database error", err);
+          reject(err);
+          return;
+        }
+        resolve(true);
       });
     });
   };
@@ -108,7 +128,7 @@ if (process.env.DB_PASSWORD === undefined) {
   };
 
   console.log("Trying to read database");
-  console.log(await read_key("test"));
+  console.log(await read_db("test"));
 }
 
-export { init, read_db, append_key, read_key };
+export { init, read_db, append_key, read_key, delete_key };

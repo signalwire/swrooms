@@ -18,13 +18,7 @@ function get_space_name(req) {
 
 router.post("/video_token", async (req, res) => {
   let { user_name, room_name, mod, enable_room_previews } = req.body;
-  if (
-    enable_room_previews === undefined ||
-    enable_room_previews === false ||
-    enable_room_previews === null
-  )
-    enable_room_previews = false;
-  else enable_room_previews = true;
+  if (enable_room_previews !== false) enable_room_previews = true;
 
   if (user_name === undefined || room_name === undefined) {
     console.log("Missing user_name or room_name");

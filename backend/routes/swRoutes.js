@@ -125,13 +125,7 @@ router.post("/activate_swrooms", async (req, res) => {
 router.post("/get_token", async (req, res) => {
   console.log("GENERATING TOKENS");
   let { user_name, room_name, mod, space, enable_room_previews } = req.body;
-  if (
-    enable_room_previews === undefined ||
-    enable_room_previews === true ||
-    enable_room_previews === null
-  )
-    enable_room_previews = true;
-  else enable_room_previews = false;
+  if (enable_room_previews !== false) enable_room_previews = true;
 
   console.log("Name: ", user_name, "Room: ", room_name, space);
 
@@ -146,7 +140,7 @@ router.post("/get_token", async (req, res) => {
       let token = await axios.post(
         `https://${space}.signalwire.com/api/video/room_tokens`,
         {
-          enable_room_previews: true,
+          enable_room_previews,
           user_name,
           room_name: room_name,
           permissions: mod

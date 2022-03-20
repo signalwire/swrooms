@@ -29,6 +29,10 @@ async function append_key(key, value) {
   console.log(" -  - DatabaseDriver: Appended key", key, "with value", value);
 }
 
+async function delete_key(key) {
+  db.data[key] = null;
+}
+
 async function read_key(key) {
   await db.read();
   if (db.data === null) return null;
@@ -37,4 +41,4 @@ async function read_key(key) {
 
 async function init() {}
 
-export { init, write_db, read_db, append_key, read_key };
+export { init, write_db, read_db, append_key, read_key, delete_key };
