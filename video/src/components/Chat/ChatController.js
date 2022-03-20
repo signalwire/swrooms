@@ -13,6 +13,7 @@ export default function ChatController({
   const [typing, setTyping] = useState(false);
   const [typingPeople, setTypingPeople] = useState([]);
   const [scrollChatBottom, setScrollChatBottom] = useState(false);
+  let [showBadge, setShowBadge] = useState(false);
   let [loading, setLoading] = useState(true);
   //   const [messages, setMessages] = useState([]);
   let [messages, setMessages] = useState([]);
@@ -53,6 +54,7 @@ export default function ChatController({
         // let memberName = memberNames.find((x) => x.id === sender_id)?.name;
         message.member.name = sender_name;
         setMessages((m) => [...m, message]);
+        setShowBadge(true);
       });
 
       chatClient.on("member.updated", (member) => {
@@ -124,6 +126,8 @@ export default function ChatController({
         if (chatClient === null || chatClient === undefined) return;
         chatClient.setMemberState({ channels: room_id, state: { typing: e } });
       }}
+      showBadge={showBadge}
+      onBadgeSeen={(e) => setShowBadge(false)}
     />
   );
 }

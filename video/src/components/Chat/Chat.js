@@ -15,11 +15,19 @@ export default function Chat({
   canLoadMore = false,
   loading = true,
   scrollChatBottom,
+  showBadge,
+  onBadgeSeen,
 }) {
   let [chatOn, setChatOn] = useState(true);
   const [loadMoreIntensity, setLoadMoreIntensity] = useState(1);
   const [chatText, setChatText] = useState("");
+  // const [showBadge, setShowBadge] = useState(false);
   const toggleChat = () => setChatOn(!chatOn);
+
+  useEffect(() => {
+    // The Chat box is on so the badge is not needed
+    if (chatOn && showBadge) onBadgeSeen();
+  }, [showBadge, chatOn]);
 
   useEffect(() => {
     if (chatTextContainer.current === null) return;
@@ -46,7 +54,7 @@ export default function Chat({
       // }
     }
     scrollToBottom();
-  }, [messages, scrollChatBottom]);
+  }, [messages, scrollChatBottom, chatOn]);
 
   let chatTextContainer = useRef(null);
 
@@ -147,15 +155,38 @@ export default function Chat({
           </div>
         </div>
       )}
-      <Button
-        style={{ position: "fixed", right: 30, bottom: 30, zIndex: 100000000 }}
-        onClick={(e) => {
-          if (!loading) toggleChat();
+      <div
+        style={{
+          position: "relative",
+          position: "fixed",
+          right: 30,
+          bottom: 30,
+          zIndex: 100000000,
         }}
-        disabled={loading}
       >
-        {loading ? <MdRefresh /> : chatOn ? <MdClose /> : <MdChat />}
-      </Button>
+        {showBadge && (
+          <div
+            style={{
+              width: 15,
+              height: 15,
+              borderRadius: 10,
+              background: "red",
+              position: "absolute",
+              top: -6,
+              right: -6,
+            }}
+          ></div>
+        )}
+        <Button
+          style={{}}
+          onClick={(e) => {
+            if (!loading) toggleChat();
+          }}
+          disabled={loading}
+        >
+          {loading ? <MdRefresh /> : chatOn ? <MdClose /> : <MdChat />}
+        </Button>
+      </div>
     </>
   );
 }
