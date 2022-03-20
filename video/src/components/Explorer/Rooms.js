@@ -60,6 +60,7 @@ export default function Rooms({ space }) {
       >
         {roomList.roomSessions.map((room) => (
           <div
+            key={room.id}
             style={{
               width: 300,
             }}
@@ -82,27 +83,7 @@ export default function Rooms({ space }) {
                   // }")`,
                 }}
               >
-                {room.preview_url == null ? (
-                  <div
-                    style={{
-                      background: "#eee",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      minHeight: 170,
-                      color: "#aaa",
-                    }}
-                  >
-                    Preview disabled for <br />
-                    this room
-                  </div>
-                ) : (
-                  <VideoPlayer
-                    key={room.id}
-                    src={room.preview_url}
-                    refreshInterval={5}
-                  />
-                )}
+                <VideoPlayer src={room.preview_url} />
               </div>
               <Card.Title style={{ padding: 12 }}>Nirav's room</Card.Title>
               {/* <Card.Title style={{ padding: 12 }}>{room.name}</Card.Title> */}
