@@ -85,8 +85,7 @@ export default function Rooms({ space }) {
               >
                 <VideoPlayer src={room.preview_url} />
               </div>
-              <Card.Title style={{ padding: 12 }}>Nirav's room</Card.Title>
-              {/* <Card.Title style={{ padding: 12 }}>{room.name}</Card.Title> */}
+              <Card.Title style={{ padding: 12 }}>{room.name}</Card.Title>
             </Card>
           </div>
         ))}
