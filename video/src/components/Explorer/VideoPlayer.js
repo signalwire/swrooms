@@ -58,9 +58,9 @@ export default function VideoPlayer({
   // needed to preserve the "muted" attribute
   // see https://github.com/facebook/react/issues/10389
   const videoElement = {
-    __html: `<video src="${
-      loading ? "https://hq.api.sw.work/media/loading_loop.mp4" : srcUrl
-    }" autoPlay loop muted playsInline style="width: 100%;"></video>`,
+    __html: `<img src="${
+      loading ? "/swloading.gif" : srcUrl
+    }" style="width: 100%;min-height:190px;"></video>`,
   };
 
   if (srcUrl === null) {
