@@ -19,7 +19,12 @@ export default function JoinCallForm({ space }) {
 
         <div style={{ color: "#aaa", marginTop: 25 }}>— or —</div>
         <Button
-          style={{ width: 200, marginTop: 25, marginBottom: 40 }}
+          style={{
+            width: 200,
+            marginTop: 25,
+            marginBottom: 40,
+            marginRight: 20,
+          }}
           variant="primary"
           type="submit"
           onClick={(e) => {
@@ -27,6 +32,17 @@ export default function JoinCallForm({ space }) {
           }}
         >
           Join Manually
+        </Button>
+
+        <Button
+          style={{ marginTop: 25, marginBottom: 40 }}
+          variant="secondary"
+          type="submit"
+          onClick={(e) => {
+            history.push("/invite?m=1&r=guest");
+          }}
+        >
+          Join guest room
         </Button>
       </div>
     </Container>

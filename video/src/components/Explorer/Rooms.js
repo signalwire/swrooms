@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Card, Container } from "react-bootstrap";
-import VideoPlayer from "./VideoPlayer";
+import PreviewElement from "./PreviewElement";
 import socket from "../socket.js";
 import { useHistory } from "react-router-dom";
 import "./rooms.css";
@@ -83,7 +83,7 @@ export default function Rooms({ space }) {
                   // }")`,
                 }}
               >
-                <VideoPlayer src={room.preview_url} />
+                <PreviewElement src={room.preview_url} />
               </div>
               <Card.Title style={{ padding: 12 }}>{room.name}</Card.Title>
             </Card>

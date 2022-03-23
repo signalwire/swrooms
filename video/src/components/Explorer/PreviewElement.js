@@ -1,11 +1,26 @@
-import React, { useEffect, useState, useRef } from "react";
-
-export default function VideoPlayer({
+import React, { useEffect, useState } from "react";
+function ErrorPlaceholder({ message }) {
+  return (
+    <div
+      style={{
+        background: "#eee",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: 170,
+        color: "#aaa",
+      }}
+    >
+      {/* Preview disabled for <br /> this room */}
+      {message}
+    </div>
+  );
+}
+export default function PreviewElement({
   src,
-  refreshInterval = 30,
+  refreshInterval = 9,
   maxRetries = 7,
 }) {
-  const mydiv = useRef(null);
   const [loading, setLoading] = useState(true);
   const [srcUrl, setSrcUrl] = useState(src);
   const [loadFail, setLoadFail] = useState(false);
@@ -55,48 +70,23 @@ export default function VideoPlayer({
     };
   }, [src, refreshInterval, loading]);
 
-  // needed to preserve the "muted" attribute
-  // see https://github.com/facebook/react/issues/10389
-  const videoElement = {
-    __html: `<img src="${
-      loading ? "/swloading.gif" : srcUrl
-    }" style="width: 100%;min-height:190px;"></video>`,
-  };
-
-  if (srcUrl === null) {
+  if (srcUrl === null)
     return (
-      <div
-        style={{
-          background: "#eee",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: 170,
-          color: "#aaa",
-        }}
-      >
+      <ErrorPlaceholder>
         Preview disabled for <br />
         this room
-      </div>
+      </ErrorPlaceholder>
     );
-  }
 
-  if (loadFail) {
-    return (
-      <div
-        style={{
-          background: "#eee",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: 170,
-          color: "#aaa",
-        }}
-      >
-        Error Loading Preview
-      </div>
-    );
-  }
+  if (loadFail)
+    return <ErrorPlaceholder>Error Loading Preview</ErrorPlaceholder>;
 
-  return <div ref={mydiv} dangerouslySetInnerHTML={videoElement}></div>;
+  return (
+    <div>
+      <img
+        src={loading ? "/swloading.gif" : srcUrl}
+        style={{ width: "100%", minHeight: 170 }}
+      />
+    </div>
+  );
 }
