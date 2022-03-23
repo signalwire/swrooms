@@ -22,6 +22,7 @@ import Rooms from "../components/Explorer/Rooms.js";
 import ChatInput from "../components/Chat/ChatInput.js";
 import TypingDots from "../components/Chat/TypingDots.js";
 import ManualJoin from "../components/Explorer/ManualJoin.js";
+import PrebuiltRooms from "../components/PrebuiltRooms/PreBuiltRooms.js";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -97,17 +98,8 @@ function VideoApp({ space }) {
           <Admin />
         </Route>
 
-        <Route path="/chat_test">
-          {/* <ChatController /> */}
-          <>
-            {typing && <TypingDots />}
-
-            <ChatInput
-              onTyping={(typing) => {
-                setTyping(typing);
-              }}
-            />
-          </>
+        <Route path="/prebuilt">
+          <PrebuiltRooms />
         </Route>
 
         <Route path="/admin_login">

@@ -48,6 +48,7 @@ export default function PreviewElement({
           }
         }
       } else {
+        if (src === null || src === undefined) return;
         const url = new URL(src);
         url.searchParams.set("t", +new Date());
         setSrcUrl(url.toString());

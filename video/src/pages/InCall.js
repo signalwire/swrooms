@@ -144,7 +144,6 @@ export default function InCall({
             sm="auto"
             xs="auto"
           >
-            {roomDetails.mod ? "Moderator" : "normal uwer"}
             <Video
               space={space}
               onRoomInit={onRoomInit}
