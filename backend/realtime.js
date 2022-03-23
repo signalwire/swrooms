@@ -231,8 +231,9 @@ function io_realtime(server) {
 
 export { io_realtime, start_new_session, stop_session };
 let cache = {};
-async function get_room_sessions(space, credentials) {
-  if ((+new Date() - cache.time ?? Infinity) < 5000) {
+async function get_room_sessions(space, credentials, useCache = true) {
+  let lastDataPull = +new Date() - cache.time ?? Infinity;
+  if (useCache && lastDataPull < 5000) {
     console.log(
       "Cache triggered",
       +new Date(),
@@ -241,6 +242,8 @@ async function get_room_sessions(space, credentials) {
     );
     return cache.data.data.data;
   } else {
+    if (!useCache)
+      console.log(" - Cache was available but manually overridden");
     console.log("Getting new data", +new Date() - cache.time);
     let data = await axios.get(
       `https://${space}.signalwire.com/api/video/room_sessions?page_size=100&status=in-progress`,
@@ -304,7 +307,13 @@ function initPublicNamespace(socket, io) {
         )
           return;
         console.log("message got:", message);
-        obj.roomSessions = await get_room_sessions(space, credentials);
+
+        // if the room has ended, don't rely on cache
+        obj.roomSessions = await get_room_sessions(
+          space,
+          credentials,
+          message !== "room.ended"
+        );
         // console.log("rooms_updated", obj, "sending to client");
         io.to(socket.id).emit("rooms_updated", obj);
       };
