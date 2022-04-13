@@ -37,12 +37,28 @@ export default function Video({
         try {
           console.log("Setting up RTC session");
           console.log(container.current);
+          let video = true,
+            audio = true;
           try {
+            try {
+              video = await SignalWire.WebRTC.getCameraDevicesWithPermissions();
+            } catch (e) {
+              video = false;
+            }
+            try {
+              audio =
+                await SignalWire.WebRTC.getMicrophoneDevicesWithPermissions();
+            } catch (e) {
+              audio = false;
+            }
+
+            console.log("PERMISSIONS", audio, video);
+
             room = await SignalWire.Video.RoomSession({
               token,
               rootElement: container.current,
-              video: true,
-              audio: true,
+              video,
+              audio,
             });
             window.roomSession = room; //expose room session for debugging
             console.log(room);
