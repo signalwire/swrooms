@@ -4,6 +4,7 @@ import generateLink from "../Utils/generateLink";
 import copyLink from "../Utils/copyLink.js";
 
 export default function InviteButton({
+  staticURL = false,
   room = "room",
   mod,
   eventLogger = (msg) => {
@@ -17,40 +18,58 @@ export default function InviteButton({
           Invite
         </Dropdown.Toggle>
 
-        <Dropdown.Menu>
-          <Dropdown.Header>As guest</Dropdown.Header>
-          <Dropdown.Item
-            onClick={() => {
-              copyLink(generateLink(room));
-              eventLogger(
-                "The link " + generateLink(room) + " copied to clipboard.",
-                "Link copied",
-                "info"
-              );
-            }}
-          >
-            {generateLink(room)}
-          </Dropdown.Item>
-          {mod && (
-            <>
-              <Dropdown.Header>As moderator</Dropdown.Header>
-              <Dropdown.Item
-                onClick={() => {
-                  copyLink(generateLink(room, mod));
-                  eventLogger(
-                    "The link " +
-                      generateLink(room, mod) +
-                      " copied to clipboard.",
-                    "Link copied",
-                    "info"
-                  );
-                }}
-              >
-                {generateLink(room, "mod")}
-              </Dropdown.Item>
-            </>
-          )}
-        </Dropdown.Menu>
+        {staticURL ? (
+          <Dropdown.Menu>
+            <Dropdown.Header>As guest</Dropdown.Header>
+            <Dropdown.Item
+              onClick={() => {
+                copyLink(staticURL);
+                eventLogger(
+                  "The link " + staticURL + " copied to clipboard.",
+                  "Link copied",
+                  "info"
+                );
+              }}
+            >
+              {staticURL}
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        ) : (
+          <Dropdown.Menu>
+            <Dropdown.Header>As guest</Dropdown.Header>
+            <Dropdown.Item
+              onClick={() => {
+                copyLink(generateLink(room));
+                eventLogger(
+                  "The link " + generateLink(room) + " copied to clipboard.",
+                  "Link copied",
+                  "info"
+                );
+              }}
+            >
+              {generateLink(room)}
+            </Dropdown.Item>
+            {mod && (
+              <>
+                <Dropdown.Header>As moderator</Dropdown.Header>
+                <Dropdown.Item
+                  onClick={() => {
+                    copyLink(generateLink(room, mod));
+                    eventLogger(
+                      "The link " +
+                        generateLink(room, mod) +
+                        " copied to clipboard.",
+                      "Link copied",
+                      "info"
+                    );
+                  }}
+                >
+                  {generateLink(room, "mod")}
+                </Dropdown.Item>
+              </>
+            )}
+          </Dropdown.Menu>
+        )}
       </Dropdown>
     </>
   );

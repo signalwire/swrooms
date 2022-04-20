@@ -3,8 +3,12 @@ import useScript from "./useScript";
 import useStyle from "./useStyle";
 
 export default function ReadyRoom({ token, theme = "light" }) {
-  let scriptLoaded = useScript("https://cdn.swire.io/video/rooms/index.js");
-  let styleLoaded = useStyle("https://cdn.swire.io/video/rooms/signalwire.css");
+  let scriptLoaded = useScript(
+    "https://cdn.signalwire.com/video/rooms/index.js"
+  );
+  let styleLoaded = useStyle(
+    "https://cdn.signalwire.com/video/rooms/signalwire.css"
+  );
   let room = useRef();
 
   useEffect(() => {
